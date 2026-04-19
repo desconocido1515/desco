@@ -1,338 +1,434 @@
 import util from 'util'
 import path from 'path' 
 
-
 function handler(m, { groupMetadata, command, usedPrefix, conn }) {
-   let user = a => '@' + a.split('@')[0] //'@' + a.split('@')[0]
    
-let ps = groupMetadata.participants.map(v => v.id)
-let a = ps.getRandom()
-let b = ps.getRandom()
-let c = ps.getRandom()
-let d = ps.getRandom()
-let e = ps.getRandom()
-let f = ps.getRandom()
-let g = ps.getRandom()
-let h = ps.getRandom()
-let i = ps.getRandom()
-let j = ps.getRandom()
+    // Obtener lista de participantes (JIDs completos)
+    let participantes = groupMetadata.participants.map(v => v.id || v.jid)
+    
+    // Función para obtener N participantes únicos aleatorios
+    const obtenerUnicos = (cantidad) => {
+        if (participantes.length < cantidad) return null
+        // Mezclar array y tomar los primeros 'cantidad'
+        let shuffled = [...participantes]
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+        }
+        return shuffled.slice(0, cantidad)
+    }
+    
+    // Función para extraer número del JID
+    const num = (jid) => jid.split('@')[0]
+    
+    // Validación genérica
+    const validarParticipantes = (necesarios, comandoNombre) => {
+        if (participantes.length < necesarios) {
+            conn.sendMessage(m.chat, { 
+                text: `⚠️ *${comandoNombre}*\n\n❌ *Hola humano, no hay suficientes integrantes.*\n✅ *Activa este grupo* con al menos ${necesarios} participantes.` 
+            }, { quoted: m })
+            return false
+        }
+        return true
+    }
+    
+    // ========== TOP M1014 (10 únicos) ==========
+    if (command == 'topm1014') {
+        if (!validarParticipantes(10, 'TOP M1014')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 MEJORES JUGADORES A M1014☠️_*
+    
+*_1.- ☠️ @${num(a)}_* ☠️
+*_2.- ☠️ @${num(b)}_* ☠️
+*_3.- ☠️ @${num(c)}_* ☠️
+*_4.- ☠️ @${num(d)}_* ☠️
+*_5.- ☠️ @${num(e)}_* ☠️
+*_6.- ☠️ @${num(f)}_* ☠️
+*_7.- ☠️ @${num(g)}_* ☠️
+*_8.- ☠️ @${num(h)}_* ☠️
+*_9.- ☠️ @${num(i)}_* ☠️
+*_10.- ☠️ @${num(j)}_* ☠️`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP COMPE (10 únicos) ==========
+    if (command == 'topcompe') {
+        if (!validarParticipantes(10, 'TOP COMPE')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 MEJORES JUGADORES DE COMPE🇧🇷_*
+    
+*_1.- 🇧🇷 @${num(a)}_* 🇧🇷
+*_2.- 🇧🇷 @${num(b)}_* 🇧🇷
+*_3.- 🇧🇷 @${num(c)}_* 🇧🇷
+*_4.- 🇧🇷 @${num(d)}_* 🇧🇷
+*_5.- 🇧🇷 @${num(e)}_* 🇧🇷
+*_6.- 🇧🇷 @${num(f)}_* 🇧🇷
+*_7.- 🇧🇷 @${num(g)}_* 🇧🇷
+*_8.- 🇧🇷 @${num(h)}_* 🇧🇷
+*_9.- 🇧🇷 @${num(i)}_* 🇧🇷
+*_10.- 🇧🇷 @${num(j)}_* 🇧🇷`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== CLASIFICATORIA (3 únicos) ==========
+    if (command == 'clasificatoria') {
+        if (!validarParticipantes(3, 'CLASIFICATORIA')) return
+        let seleccion = obtenerUnicos(3)
+        let [a,b,c] = seleccion
+        
+        let texto = `¡𝑽𝑨𝑴𝑶𝑺 𝑨 𝑩𝑹 𝑪𝑳𝑨𝑺𝑰𝑭𝑰𝑪𝑨𝑻𝑶𝑹𝑰𝑨!⚔️
 
-if (command == 'topgays') {
-let vn = './media/gay2.mp3'
-let top = `*🌈TOP 10 GAYS/LESBIANAS DEL GRUPO🌈*
-    
-*_1.- 🏳️‍🌈 ${user(a)}_* 🏳️‍🌈
-*_2.- 🪂 ${user(b)}_* 🪂
-*_3.- 🪁 ${user(c)}_* 🪁
-*_4.- 🏳️‍🌈 ${user(d)}_* 🏳️‍🌈
-*_5.- 🪂 ${user(e)}_* 🪂
-*_6.- 🪁 ${user(f)}_* 🪁
-*_7.- 🏳️‍🌈 ${user(g)}_* 🏳️‍🌈
-*_8.- 🪂 ${user(h)}_* 🪂
-*_9.- 🪁 ${user(i)}_* 🪁
-*_10.- 🏳️‍🌈 ${user(j)}_* 🏳️‍🌈`
-m.reply(top, null, { mentions: conn.parseMention(top) })
-//m.reply(top, null, {
+𝐶𝑜𝑛𝑓𝑖𝑟𝑚𝑒𝑛:
+🥷🏻 @${num(a)}
+🥷🏻 @${num(b)}
+🥷🏻 @${num(c)}
 
-//m.reply(conn.sendHydrated(m.chat, `*SON MUY GAYS!!* 🌈`, wm, null, md, '𝙂𝙖𝙩𝙖𝘽𝙤𝙩-𝙈𝘿', null, null, [
-//['𝙊𝙩𝙧𝙖 𝙫𝙚𝙯 | 𝘼𝙜𝙖𝙞𝙣 🔮', `${usedPrefix + command}`],
-//['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']
-//], m))
-   
-//contextInfo: { 
-//mentionedJid: [a, b, c, d, e, f, g, h, i, j]
-//}})
-conn.sendFile(m.chat, vn, 'error.mp3', null, m, true, {
-type: 'audioMessage', 
-ptt: true })}
+¡𝑳𝑳𝑬𝑽𝑬𝑵 𝑯𝑨𝑩𝑰𝑳𝑰𝑫𝑨𝑫𝑬𝑺 𝒀 𝑴𝑨𝑺𝑪𝑶𝑻𝑨, 𝑽𝑨𝑴𝑶𝑺 𝑨 𝑷𝑹𝑬𝑵𝑫𝑬𝑹 𝑭𝑶𝑭𝑶𝑮𝑶 𝑬𝑵 𝑩𝑹!`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
     
-if (command == 'topotakus') {
-let vn = './media/otaku.mp3'
-let top = `*🌸 TOP 10 OTAKUS DEL GRUPO 🌸*
-    
-*_1.- 💮 ${user(a)}_* 💮
-*_2.- 🌷 ${user(b)}_* 🌷
-*_3.- 💮 ${user(c)}_* 💮
-*_4.- 🌷 ${user(d)}_* 🌷
-*_5.- 💮 ${user(e)}_* 💮
-*_6.- 🌷 ${user(f)}_* 🌷
-*_7.- 💮 ${user(g)}_* 💮
-*_8.- 🌷 ${user(h)}_* 🌷
-*_9.- 💮 ${user(i)}_* 💮
-*_10.- 🌷 ${user(j)}_* 🌷`
-m.reply(top, null, { mentions: conn.parseMention(top) })
-//m.reply(top, null, {
-//conn.sendHydrated(m.chat, top, wm, null, md, '𝙂𝙖𝙩𝙖𝘽𝙤𝙩-𝙈𝘿', null, null, [
-//['𝙊𝙩𝙧𝙖 𝙫𝙚𝙯 | 𝘼𝙜𝙖𝙞𝙣 🔮', `${usedPrefix + command}`],
-//['𝙑𝙤𝙡𝙫𝙚𝙧 𝙖𝙡 𝙈𝙚𝙣𝙪́ | 𝘽𝙖𝙘𝙠 𝙩𝙤 𝙈𝙚𝙣𝙪 ☘️', '/menu']
-//], m, null, {
-//contextInfo: {
-//mentionedJid: [a, b, c, d, e, f, g, h, i, j]
-//}})
-conn.sendFile(m.chat, vn, 'otaku.mp3', null, m, true, {
-type: 'audioMessage', 
-ptt: true 
-})}
-   
-if (command == 'topintegrantes') {
-let top = `*_💎TOP 10 L@S MEJORES INTEGRANTES👑_*
-    
-*_1.- 💎 ${user(a)}_* 💎
-*_2.- 👑 ${user(b)}_* 👑
-*_3.- 💎 ${user(c)}_* 💎
-*_4.- 👑 ${user(d)}_* 👑
-*_5.- 💎 ${user(e)}_* 💎
-*_6.- 👑 ${user(f)}_* 👑
-*_7.- 💎 ${user(g)}_* 💎
-*_8.- 👑 ${user(h)}_* 👑
-*_9.- 💎 ${user(i)}_* 💎
-*_10.- 👑 ${user(j)}_* 👑`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topintegrante') {
-let top = `*_💎TOP 10 L@S MEJORES INTEGRANTES👑_*
-    
-*_1.- 💎 ${user(a)}_* 💎
-*_2.- 👑 ${user(b)}_* 👑
-*_3.- 💎 ${user(c)}_* 💎
-*_4.- 👑 ${user(d)}_* 👑
-*_5.- 💎 ${user(e)}_* 💎
-*_6.- 👑 ${user(f)}_* 👑
-*_7.- 💎 ${user(g)}_* 💎
-*_8.- 👑 ${user(h)}_* 👑
-*_9.- 💎 ${user(i)}_* 💎
-*_10.- 👑 ${user(j)}_* 👑`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'toplagrasa') {
-let top = `*_Uwu TOP 10 LA GRASA Uwu_* 
-    
-*_1.- Bv ${user(a)} Bv_*
-*_2.- :v ${user(b)} :v_*
-*_3.- :D ${user(c)} :D_*
-*_4.- Owo ${user(d)} Owo_*
-*_5.- U.u ${user(e)} U.u_*
-*_6.- >:v ${user(f)} >:v_*
-*_7.- :'v ${user(g)} :'v_*
-*_8.- ._. ${user(h)} ._._*
-*_9.- :V ${user(i)} :V_*
-*_10.- XD ${user(j)} XD_*`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topgrasa') {
-let top = `*_Uwu TOP 10 LA GRASA Uwu_* 
-    
-*_1.- Bv ${user(a)} Bv_*
-*_2.- :v ${user(b)} :v_*
-*_3.- :D ${user(c)} :D_*
-*_4.- Owo ${user(d)} Owo_*
-*_5.- U.u ${user(e)} U.u_*
-*_6.- >:v ${user(f)} >:v_*
-*_7.- :'v ${user(g)} :'v_*
-*_8.- ._. ${user(h)} ._._*
-*_9.- :V ${user(i)} :V_*
-*_10.- XD ${user(j)} XD_*`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'toppanafrescos') {
-let top = `*_👊TOP 10 PANAFRESCOS👊_* 
-    
-*_1.- 🤑 ${user(a)}_* 🤑
-*_2.- 🤙 ${user(b)}_* 🤙
-*_3.- 😎 ${user(c)}_* 😎
-*_4.- 👌 ${user(d)}_* 👌
-*_5.- 🧐 ${user(e)}_* 🧐
-*_6.- 😃 ${user(f)}_* 😃
-*_7.- 😋 ${user(g)}_* 😋
-*_8.- 🤜 ${user(h)}_* 🤜
-*_9.- 💪 ${user(i)}_* 💪
-*_10.- 😉 ${user(j)}_* 😉`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'toppanafresco') {
-let top = `*_👊TOP 10 PANAFRESCOS👊_* 
-    
-*_1.- 🤑 ${user(a)}_* 🤑
-*_2.- 🤙 ${user(b)}_* 🤙
-*_3.- 😎 ${user(c)}_* 😎
-*_4.- 👌 ${user(d)}_* 👌
-*_5.- 🧐 ${user(e)}_* 🧐
-*_6.- 😃 ${user(f)}_* 😃
-*_7.- 😋 ${user(g)}_* 😋
-*_8.- 🤜 ${user(h)}_* 🤜
-*_9.- 💪 ${user(i)}_* 💪
-*_10.- 😉 ${user(j)}_* 😉`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topshiposters') {
-let top = `*_😱TOP 10 SHIPOSTERS DEL GRUPO😱_* 
-    
-*_1.- 😈 ${user(a)}_* 😈
-*_2.- 🤙 ${user(b)}_* 🤙
-*_3.- 🥶 ${user(c)}_* 🥶
-*_4.- 🤑 ${user(d)}_* 🤑
-*_5.- 🥵 ${user(e)}_* 🥵
-*_6.- 🤝 ${user(f)}_* 🤝
-*_7.- 😟 ${user(g)}_* 😟
-*_8.- 😨 ${user(h)}_* 😨
-*_9.- 😇 ${user(i)}_* 😇
-*_10.- 🤠 ${user(j)}_* 🤠`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topshipost') {
-let top = `*_😱TOP 10 SHIPOSTERS DEL GRUPO😱_* 
-    
-*_1.- 😈 ${user(a)}_* 😈
-*_2.- 🤙 ${user(b)}_* 🤙
-*_3.- 🥶 ${user(c)}_* 🥶
-*_4.- 🤑 ${user(d)}_* 🤑
-*_5.- 🥵 ${user(e)}_* 🥵
-*_6.- 🤝 ${user(f)}_* 🤝
-*_7.- 😟 ${user(g)}_* 😟
-*_8.- 😨 ${user(h)}_* 😨
-*_9.- 😇 ${user(i)}_* 😇
-*_10.- 🤠 ${user(j)}_* 🤠`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'toppajer@s') {
-let top = `*_😏TOP L@S MAS PAJEROS/AS DEL GRUPO💦_* 
-    
-*_1.- 🥵 ${user(a)}_* 💦
-*_2.- 🥵 ${user(b)}_* 💦
-*_3.- 🥵 ${user(c)}_* 💦
-*_4.- 🥵 ${user(d)}_* 💦
-*_5.- 🥵 ${user(e)}_* 💦
-*_6.- 🥵 ${user(f)}_* 💦
-*_7.- 🥵 ${user(g)}_* 💦
-*_8.- 🥵 ${user(h)}_* 💦
-*_9.- 🥵 ${user(i)}_* 💦
-*_10.- 🥵 ${user(j)}_* 💦`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'toplind@s') {
-let top = `*_😳TOP L@S MAS LIND@S Y SEXIS DEL GRUPO😳_*
-    
-*_1.- ✨ ${user(a)}_* ✨
-*_2.- ✨ ${user(b)}_* ✨
-*_3.- ✨ ${user(c)}_* ✨
-*_4.- ✨ ${user(d)}_* ✨
-*_5.- ✨ ${user(e)}_* ✨
-*_6.- ✨ ${user(f)}_* ✨
-*_7.- ✨ ${user(g)}_* ✨
-*_8.- ✨ ${user(h)}_* ✨
-*_9.- ✨ ${user(i)}_* ✨
-*_10.- ✨ ${user(j)}_* ✨`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'toplindos') {
-let top = `*_😳TOP L@S MAS LIND@S Y SEXIS DEL GRUPO😳_*
-    
-*_1.- ✨ ${user(a)}_* ✨
-*_2.- ✨ ${user(b)}_* ✨
-*_3.- ✨ ${user(c)}_* ✨
-*_4.- ✨ ${user(d)}_* ✨
-*_5.- ✨ ${user(e)}_* ✨
-*_6.- ✨ ${user(f)}_* ✨
-*_7.- ✨ ${user(g)}_* ✨
-*_8.- ✨ ${user(h)}_* ✨
-*_9.- ✨ ${user(i)}_* ✨
-*_10.- ✨ ${user(j)}_* ✨`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topput@s') {
-let top = `*_😏TOP L@S MAS PUT@S DEL GRUPO SON🔥_* 
-    
-*_1.- 👉 ${user(a)}_* 👌
-*_2.- 👉 ${user(b)}_* 👌
-*_3.- 👉 ${user(c)}_* 👌
-*_4.- 👉 ${user(d)}_* 👌
-*_5.- 👉 ${user(e)}_* 👌
-*_6.- 👉 ${user(f)}_* 👌
-*_7.- 👉 ${user(g)}_* 👌
-*_8.- 👉 ${user(h)}_* 👌
-*_9.- 👉 ${user(i)}_* 👌
-*_10.- 👉 ${user(j)}_* 👌`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topfamosos') {
-let top = `*_🌟TOP PERSONAS FAMOSAS EN EL GRUPO🌟_* 
-    
-*_1.- 🛫 ${user(a)}_* 🛫
-*_2.- 🥂 ${user(b)}_* 🥂
-*_3.- 🤩 ${user(c)}_* 🤩
-*_4.- 🛫 ${user(d)}_* 🛫
-*_5.- 🥂 ${user(e)}_* 🥂
-*_6.- 🤩 ${user(f)}_* 🤩
-*_7.- 🛫 ${user(g)}_* 🛫
-*_8.- 🥂 ${user(h)}_* 🥂
-*_9.- 🤩 ${user(i)}_* 🤩
-*_10.- 🛫 ${user(j)}_* 🛫`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topfamos@s') {
-let top = `*_🌟TOP PERSONAS FAMOSAS EN EL GRUPO🌟_* 
-    
-*_1.- 🛫 ${user(a)}_* 🛫
-*_2.- 🥂 ${user(b)}_* 🥂
-*_3.- 🤩 ${user(c)}_* 🤩
-*_4.- 🛫 ${user(d)}_* 🛫
-*_5.- 🥂 ${user(e)}_* 🥂
-*_6.- 🤩 ${user(f)}_* 🤩
-*_7.- 🛫 ${user(g)}_* 🛫
-*_8.- 🥂 ${user(h)}_* 🥂
-*_9.- 🤩 ${user(i)}_* 🤩
-*_10.- 🛫 ${user(j)}_* 🛫`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-   
-if (command == 'topparejas') {
-let top = `*_😍 Las 5 maravillosas parejas del grupo 😍_*
-    
-*_1.- ${user(a)} 💘 ${user(b)}_* 
-Que hermosa pareja 💖, me invitan a su Boda 🛐
+    // ========== DUELO (3 únicos) ==========
+    if (command == 'duelo') {
+        if (!validarParticipantes(3, 'DUELO')) return
+        let seleccion = obtenerUnicos(3)
+        let [a,b,c] = seleccion
+        
+        let texto = `¡𝑽𝑨𝑴𝑶𝑺 𝑨 𝑫𝑬 𝑪𝑳𝑨𝑺𝑰𝑭𝑰𝑪𝑨𝑻𝑶𝑹𝑰𝑨 !🇧🇷
 
-*_2.- ${user(c)} 💘 ${user(d)}_*  
-🌹 Ustedes se merecen lo mejor del mundo 💞
+𝐶𝑜𝑛𝑓𝑖𝑟𝑚𝑒𝑛:
+🥷🏻 @${num(a)}
+🥷🏻 @${num(b)}
+🥷🏻 @${num(c)}
 
-*_3.- ${user(e)} 💘 ${user(f)}_* 
-Tan enamorados 😍, para cuando la familia 🥰
+¡𝑳𝑳𝑬𝑽𝑬𝑵 𝑯𝑨𝑩𝑰𝑳𝑰𝑫𝑨𝑫𝑬𝑺 𝒀 𝑴𝑨𝑺𝑪𝑶𝑻𝑨, 𝑽𝑨𝑴𝑶𝑺 𝑨 𝑷𝑹𝑬𝑵𝑫𝑬𝑹 𝑭𝑶𝑭𝑶𝑮𝑶 𝑬𝑵 𝑫𝑬!`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== DUO (1 único) ==========
+    if (command == 'duo') {
+        if (!validarParticipantes(1, 'DUO')) return
+        let seleccion = obtenerUnicos(1)
+        let [a] = seleccion
+        
+        let texto = `¡𝑽𝑨𝑴𝑶𝑺 𝑼𝑵 𝑫𝑼𝑰𝑻𝑶!⚔️
 
-*_4.- ${user(g)} 💘 ${user(h)}_* 
-💗 Decreto que ustedes son la pareja del Año 💗 
+𝐶𝑜𝑛𝑓𝑖𝑟𝑚𝑎:
+❤️ @${num(a)}
 
-*_5.- ${user(i)} 💘 ${user(j)}_* 
-Genial! 💝, están de Luna de miel 🥵✨❤️‍🔥`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
+¡𝑺𝑬𝑹𝑬 𝑻𝑼 𝑫𝑼́𝑶 𝑫𝑰𝑵𝑨́𝑴𝑰𝑪𝑶 𝑴𝑨𝑺 𝑶𝑻𝑨𝑲𝑼!`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== COMPE (10 únicos) ==========
+    if (command == 'compe') {
+        if (!validarParticipantes(10, 'COMPE')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `¡𝑽𝑨𝑴𝑶𝑺 𝑨 𝑼𝑵 𝑪𝑶𝑴𝑷𝑬! 🇧🇷
+
+𝐶𝑜𝑛𝑓𝑖𝑟𝑚𝑒𝑛:
+🥷🏻 @${num(a)}
+🥷🏻 @${num(b)}
+🥷🏻 @${num(c)}
+🥷🏻 @${num(d)}
+🥷🏻 @${num(e)}
+🥷🏻 @${num(f)}
+🥷🏻 @${num(g)}
+🥷🏻 @${num(h)}
+🥷🏻 @${num(i)}
+🥷🏻 @${num(j)}
+
+𝑸𝑼𝑰𝑬𝑵 𝑵𝑶 𝑪𝑶𝑵𝑭𝑰𝑹𝑴𝑬 𝑫𝑬 𝑳𝑶𝑺 𝑴𝑬𝑵𝑪𝑰𝑶𝑵𝑨𝑫𝑶𝑺  𝑴𝑬𝑪𝑶 𝒀 𝑮𝑨𝒀.🏳️‍🌈`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP UMP (10 únicos) ==========
+    if (command == 'topump') {
+        if (!validarParticipantes(10, 'TOP UMP')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 MEJORES JUGADORES A UMP👹_*
+    
+*_1.- 👹 @${num(a)}_* 👹
+*_2.- 👹 @${num(b)}_* 👹
+*_3.- 👹 @${num(c)}_* 👹
+*_4.- 👹 @${num(d)}_* 👹
+*_5.- 👹 @${num(e)}_* 👹
+*_6.- 👹 @${num(f)}_* 👹
+*_7.- 👹 @${num(g)}_* 👹
+*_8.- 👹 @${num(h)}_* 👹
+*_9.- 👹 @${num(i)}_* 👹
+*_10.- 👹 @${num(j)}_* 👹`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP FIELES (10 únicos) ==========
+    if (command == 'topfieles') {
+        if (!validarParticipantes(10, 'TOP FIELES')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 FIELES DEL GRUPO👩🏻‍❤️‍👨🏻_*
+    
+*_1.- 👩🏻‍❤️‍👨🏻 @${num(a)}_* 👩🏻‍❤️‍👨🏻
+*_2.- 👩🏻‍❤️‍👨🏻 @${num(b)}_* 👩🏻‍❤️‍👨🏻
+*_3.- 👩🏻‍❤️‍👨🏻 @${num(c)}_* 👩🏻‍❤️‍👨🏻
+*_4.- 👩🏻‍❤️‍👨🏻 @${num(d)}_* 👩🏻‍❤️‍👨🏻
+*_5.- 👩🏻‍❤️‍👨🏻 @${num(e)}_* 👩🏻‍❤️‍👨🏻
+*_6.- 👩🏻‍❤️‍👨🏻 @${num(f)}_* 👩🏻‍❤️‍👨🏻
+*_7.- 👩🏻‍❤️‍👨🏻 @${num(g)}_* 👩🏻‍❤️‍👨🏻
+*_8.- 👩🏻‍❤️‍👨🏻 @${num(h)}_* 👩🏻‍❤️‍👨🏻
+*_9.- 👩🏻‍❤️‍👨🏻 @${num(i)}_* 👩🏻‍❤️‍👨🏻
+*_10.- 👩🏻‍❤️‍👨🏻 @${num(j)}_* 👩🏻‍❤️‍👨🏻`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP MAPA (10 únicos) ==========
+    if (command == 'topmapa') {
+        if (!validarParticipantes(10, 'TOP MAPA')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 MEJORES JUGADORES DE MAPA GRANDE💀_*
+    
+*_1.- 💀 @${num(a)}_* 💀
+*_2.- 💀 @${num(b)}_* 💀
+*_3.- 💀 @${num(c)}_* 💀
+*_4.- 💀 @${num(d)}_* 💀
+*_5.- 💀 @${num(e)}_* 💀
+*_6.- 💀 @${num(f)}_* 💀
+*_7.- 💀 @${num(g)}_* 💀
+*_8.- 💀 @${num(h)}_* 💀
+*_9.- 💀 @${num(i)}_* 💀
+*_10.- 💀 @${num(j)}_* 💀`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP JUGADORES (10 únicos) ==========
+    if (command == 'topjugadores') {
+        if (!validarParticipantes(10, 'TOP JUGADORES')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10  MEJORES JUGADORES DEL CLAN/TEAM_*
+    
+*_1.- 🎮 @${num(a)}_* 🎮
+*_2.- 🎮 @${num(b)}_* 🎮
+*_3.- 🎮 @${num(c)}_* 🎮
+*_4.- 🎮 @${num(d)}_* 🎮
+*_5.- 🎮 @${num(e)}_* 🎮
+*_6.- 🎮 @${num(f)}_* 🎮
+*_7.- 🎮 @${num(g)}_* 🎮
+*_8.- 🎮 @${num(h)}_* 🎮
+*_9.- 🎮 @${num(i)}_* 🎮
+*_10.- 🎮 @${num(j)}_* 🎮`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP INFIELES (10 únicos) ==========
+    if (command == 'topinfieles') {
+        if (!validarParticipantes(10, 'TOP INFIELES')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 INFIELES DEL GRUPO_*
+    
+*_1.- 🫣 @${num(a)}_* 🫣
+*_2.- 🫣 @${num(b)}_* 🫣
+*_3.- 🫣 @${num(c)}_* 🫣
+*_4.- 🫣 @${num(d)}_* 🫣
+*_5.- 🫣 @${num(e)}_* 🫣
+*_6.- 🫣 @${num(f)}_* 🫣
+*_7.- 🫣 @${num(g)}_* 🫣
+*_8.- 🫣 @${num(h)}_* 🫣
+*_9.- 🫣 @${num(i)}_* 🫣
+*_10.- 🫣 @${num(j)}_* 🫣`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP BINARIOS (10 únicos) ==========
+    if (command == 'topbinarios') {
+        if (!validarParticipantes(10, 'TOP BINARIOS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 BINARIOS DEL CLAN/TEAM🍌_*
+    
+*_1.- 🍌 @${num(a)}_* 🍌
+*_2.- 🍌 @${num(b)}_* 🍌
+*_3.- 🍌 @${num(c)}_* 🍌
+*_4.- 🍌 @${num(d)}_* 🍌
+*_5.- 🍌 @${num(e)}_* 🍌
+*_6.- 🍌 @${num(f)}_* 🍌
+*_7.- 🍌 @${num(g)}_* 🍌
+*_8.- 🍌 @${num(h)}_* 🍌
+*_9.- 🍌 @${num(i)}_* 🍌
+*_10.- 🍌 @${num(j)}_* 🍌`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP ALCOHOLICOS (10 únicos) ==========
+    if (command == 'topalcoholicos') {
+        if (!validarParticipantes(10, 'TOP ALCOHÓLICOS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 ALCOHÓLIC@S DEL GRUPO🍺_*
+    
+*_1.- 🍻 @${num(a)}_* 🍺
+*_2.- 🍻 @${num(b)}_* 🍺
+*_3.- 🍻 @${num(c)}_* 🍺
+*_4.- 🍻 @${num(d)}_* 🍺
+*_5.- 🍻 @${num(e)}_* 🍺
+*_6.- 🍻 @${num(f)}_* 🍺
+*_7.- 🍻 @${num(g)}_* 🍺
+*_8.- 🍻 @${num(h)}_* 🍺
+*_9.- 🍻 @${num(i)}_* 🍺
+*_10.- 🍻 @${num(j)}_* 🍺`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP SIDOSOS (10 únicos) ==========
+    if (command == 'topsidosos') {
+        if (!validarParticipantes(10, 'TOP SIDOSOS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 SIDOS@S DEL GRUPO🦠_*
+    
+*_1.- 🦠 @${num(a)}_* 🦠
+*_2.- 🦠 @${num(b)}_* 🦠
+*_3.- 🦠 @${num(c)}_* 🦠
+*_4.- 🦠 @${num(d)}_* 🦠
+*_5.- 🦠 @${num(e)}_* 🦠
+*_6.- 🦠 @${num(f)}_* 🦠
+*_7.- 🦠 @${num(g)}_* 🦠
+*_8.- 🦠 @${num(h)}_* 🦠
+*_9.- 🦠 @${num(i)}_* 🦠
+*_10.- 🦠 @${num(j)}_* 🦠`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP CACHUDOS (10 únicos) ==========
+    if (command == 'topcachudos') {
+        if (!validarParticipantes(10, 'TOP CACHUDOS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 CACHUD@S DEL GRUPO🐂_*
+    
+*_1.- 🐂 @${num(a)}_* 🐂
+*_2.- 🐂 @${num(b)}_* 🐂
+*_3.- 🐂 @${num(c)}_* 🐂
+*_4.- 🐂 @${num(d)}_* 🐂
+*_5.- 🐂 @${num(e)}_* 🐂
+*_6.- 🐂 @${num(f)}_* 🐂
+*_7.- 🐂 @${num(g)}_* 🐂
+*_8.- 🐂 @${num(h)}_* 🐂
+*_9.- 🐂 @${num(i)}_* 🐂
+*_10.- 🐂 @${num(j)}_* 🐂
+
+*_EL PRIMERO EL MAS CACHUD@_*🤪`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP CHICHONAS (10 únicos) ==========
+    if (command == 'topchichonas') {
+        if (!validarParticipantes(10, 'TOP CHICHONAS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_😈TOP 10 CHICHONAS DEL GRUPO😈_*
+    
+*_1.- 👿 @${num(a)}_* 😈
+*_2.- 👿 @${num(b)}_* 😈
+*_3.- 👿 @${num(c)}_* 😈
+*_4.- 👿 @${num(d)}_* 😈
+*_5.- 👿 @${num(e)}_* 😈
+*_6.- 👿 @${num(f)}_* 😈
+*_7.- 👿 @${num(g)}_* 😈
+*_8.- 👿 @${num(h)}_* 😈
+*_9.- 👿 @${num(i)}_* 😈
+*_10.- 😈 @${num(j)}_* 😈
+
+*_LA 5 ESTA COGIBLE_*🤫`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP CULONAS (10 únicos) ==========
+    if (command == 'topculonas') {
+        if (!validarParticipantes(10, 'TOP CULONAS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP 10 CULONAS DEL GRUPO🍑_*
+    
+*_1.- 🍑 @${num(a)}_* 🍑
+*_2.- 🍑 @${num(b)}_* 🍑
+*_3.- 🍑 @${num(c)}_* 🍑
+*_4.- 🍑 @${num(d)}_* 🍑
+*_5.- 🍑 @${num(e)}_* 🍑
+*_6.- 🍑 @${num(f)}_* 🍑
+*_7.- 🍑 @${num(g)}_* 🍑
+*_8.- 🍑 @${num(h)}_* 🍑
+*_9.- 🍑 @${num(i)}_* 🍑
+*_10.- 🍑 @${num(j)}_* 🍑
+
+*_LA PRIMERA ESTA COGIBLE_*🥵`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
+    
+    // ========== TOP FEOS (10 únicos) ==========
+    if (command == 'topfeos') {
+        if (!validarParticipantes(10, 'TOP FEOS')) return
+        let seleccion = obtenerUnicos(10)
+        let [a,b,c,d,e,f,g,h,i,j] = seleccion
+        
+        let texto = `*_TOP FE@S DEL GRUPO🤢_*
+    
+*_1.- 🤢 @${num(a)}_* 🤮
+*_2.- 🤢 @${num(b)}_* 🤮
+*_3.- 🤢 @${num(c)}_* 🤮
+*_4.- 🤢 @${num(d)}_* 🤮
+*_5.- 🤢 @${num(e)}_* 🤮
+*_6.- 🤢 @${num(f)}_* 🤮
+*_7.- 🤢 @${num(g)}_* 🤮
+*_8.- 🤢 @${num(h)}_* 🤮
+*_9.- 🤢 @${num(i)}_* 🤮
+*_10.- 🤢 @${num(j)}_* 🤮
+
+*_EL 1 Y 10 LOS MAS FE@S_*🤢`
+        
+        conn.sendMessage(m.chat, { text: texto, mentions: seleccion }, { quoted: m })
+    }
    
-if (command == 'top5parejas') {
-let top = `*_😍 Las 5 maravillosas parejas del grupo 😍_*
-    
-*_1.- ${user(a)} 💘 ${user(b)}_* 
-Que hermosa pareja 💖, me invitan a su Boda 🛐
-
-*_2.- ${user(c)} 💘 ${user(d)}_*  
-🌹 Ustedes se merecen lo mejor del mundo 💞
-
-*_3.- ${user(e)} 💘 ${user(f)}_* 
-Tan enamorados 😍, para cuando la familia 🥰
-
-*_4.- ${user(g)} 💘 ${user(h)}_* 
-💗 Decreto que ustedes son la pareja del Año 💗 
-
-*_5.- ${user(i)} 💘 ${user(j)}_* 
-Genial! 💝, están de Luna de miel 🥵✨❤️‍🔥`
-m.reply(top, null, { mentions: conn.parseMention(top) })}
-
-if (command == 'top2parejas') {
-let top = `*_😍 Las 5 maravillosas parejas del grupo 😍_*
-    
-*_1.- ${user(a)} 💘 ${user(b)}_* 
-Que hermosa pareja 💖, me invitan a su Boda 🛐
-
-*_2.- ${user(c)} 💘 ${user(d)}_*  
-🌹 Ustedes se merecen lo mejor del mundo 💞`
-m.reply(top, null, { mentions: conn.parseMention(top) })}  
 }
-handler.help = handler.command = ['topgays', 'topotakus', 'topintegrantes', 'topintegrante', 'toplagrasa', 'topgrasa', 'toppanafrescos', 'toppanafresco', 'topshiposters', 'topshipost', 'toppajer@s', 'toplindos', 'toplind@s', 'topput@s', 'topfamosos', 'topfamos@s', 'topparejas', 'top5parejas' ]
+
+handler.help = handler.command = ['topm1014','clasificatoria','duelo','duo','compe','topump','topcompe','topfieles','topmapa','topjugadores','topinfieles','topbinarios','topalcoholicos','topsidosos','topcachudos','topculonas','topchichonas','topfeos']
 handler.tags = ['games']
 handler.group = true
-export default handler  
+
+export default handler
